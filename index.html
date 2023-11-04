@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Group 4 Project</title>
+    <style>
+        h1 {
+            color: #0099cc;
+            text-align: center;
+        }
+        h2 {
+            color: #333;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .password-container, ..form-container {
+            text-align: center;
+            margin: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            max-width: 300px; /* Adjust the max-width as needed */
+        }
+        label {
+            display: block;
+            margin: 10px 0;
+        }
+        input {
+            width: 100%;
+            padding: 5px;
+            margin: 5px 0;
+        }
+        button {
+            padding: 10px;
+            background-color: #0099cc;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #response {
+            margin: 20px 0;
+        }
+        /* Style for names */
+        .names-container {
+            text-align: center;
+        }
+        .names-container p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Group 4 Project</h1>
+    <div class="names-container">
+        <p>Produced By:</p>
+        <p>FADY RAOUF</p>
+        <p>Nourhan</p>
+        <p>AYA</p>
+    </div>
+
+    <div class="container">
+        <div class="password-container">
+            <h2>Sign In</h2>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required><br>
+            <button id="signInBtn">Sign In</button>
+        </div>
+
+        <div class="form-container">
+            <h2>Update Password</h2>
+            <label for="oldPassword">Old Password:</label>
+            <input type="password" id="oldPassword" name="oldPassword" required><br>
+            <label for="newPassword">New Password:</label>
+            <input type="password" id="newPassword" name="newPassword" required><br>
+            <button id="updatePasswordBtn">Update Password</button>
+        </div>
+    </div>
+
+    <div id="response"></div>
+
+    <script>
+        const signInBtn = document.getElementById('signInBtn');
+        const updatePasswordBtn = document.getElementById('updatePasswordBtn');
+        const responseDiv = document.getElementById('response');
+
+        signInBtn.addEventListener('click', async () => {
+            const password = document.getElementById('password').value;
+
+            var myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+
+            var raw = JSON.stringify({ password: password });
+
+            var requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: raw,
+                redirect: 'follow'
+            };
+
+            try {
+                const response = await fetch("http://localhost:3000/SignIn", requestOptions);
+                const data = await response.json();
+                responseDiv.textContent = JSON.stringify(data);
+            } catch (error) {
+                console.log('Error:', error);
+                responseDiv.textContent = 'An error occurred while signing in.';
+            }
+        });
+
+        updatePasswordBtn.addEventListener('click', async () => {
+            const oldPassword = document.getElementById('oldPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+
+            var myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+
+            var raw = JSON.stringify({ oldPassword: oldPassword, newPassword: newPassword });
+
+            var requestOptions = {
+                method: 'PATCH',
+                headers: myHeaders,
+                body: raw,
+                redirect: 'follow'
+            };
+
+            try {
+                const response = await fetch('http://localhost:3000/Updatepassword', requestOptions);
+                const data = await response.json();
+                responseDiv.textContent = JSON.stringify(data);
+            } catch (error) {
+                console.log('Error:');
+                responseDiv.textContent = 'An error occurred while updating the password.';
+            }
+        });
+    </script>
+</body>
+</html>
